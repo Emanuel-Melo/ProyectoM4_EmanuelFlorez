@@ -1,0 +1,31 @@
+.input__label {
+  display: grid;
+  width: min(100%, 360px);
+  gap: 0.45rem;
+  color: #b08d57;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.input__title {
+  color: #b08d57;
+}
+
+.input {
+  width: 100%;
+  border: 2px solid #dcc3aa;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: #fff8f0;
+  color: #541a1a;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.input:focus {
+  border-color: #810b38;
+  box-shadow: 0 0 0 3px rgb(129 11 56 / 14%);
+}
