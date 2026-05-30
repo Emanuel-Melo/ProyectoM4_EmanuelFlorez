@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useAuthCtx } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
 
 export default function RegisterPage() {
   const { register } = useAuthCtx();
@@ -11,14 +16,14 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     try {
       await register(email, password);
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Error al crear la cuenta");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Error al crear la cuenta"));
     }
   }
 
@@ -27,7 +32,7 @@ export default function RegisterPage() {
       <h1>Crear cuenta</h1>
       <form onSubmit={handleSubmit} className="form">
         <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input label="Contrasena" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <p className="form__error">{error}</p>}
         <Button type="submit">Crear</Button>
       </form>
