@@ -4,15 +4,15 @@
 
 html {
   min-height: 100%;
-  background: #f1e2d1;
+  background: #e1dcc9;
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: #f1e2d1;
-  color: #541a1a;
+  background: #e1dcc9;
+  color: #1f150c;
   font-family: "Roboto", sans-serif;
 }
 

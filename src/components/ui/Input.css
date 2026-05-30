@@ -2,23 +2,23 @@
   display: grid;
   width: min(100%, 360px);
   gap: 0.45rem;
-  color: #b08d57;
+  color: #412d15;
   font-size: 1rem;
   font-weight: 700;
   text-align: left;
 }
 
 .input__title {
-  color: #b08d57;
+  color: #412d15;
 }
 
 .input {
   width: 100%;
-  border: 2px solid #dcc3aa;
+  border: 2px solid #ffffff;
   border-radius: 8px;
   padding: 0.85rem 1rem;
-  background: #fff8f0;
-  color: #541a1a;
+  background: #ffffff;
+  color: #1f150c;
   outline: none;
   transition:
     border-color 160ms ease,
@@ -26,6 +26,6 @@
 }
 
 .input:focus {
-  border-color: #810b38;
-  box-shadow: 0 0 0 3px rgb(129 11 56 / 14%);
+  border-color: #412d15;
+  box-shadow: 0 0 0 3px rgb(65 45 21 / 18%);
 }
