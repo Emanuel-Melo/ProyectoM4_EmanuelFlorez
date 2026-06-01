@@ -1,0 +1,12 @@
+.auth-panel--register {
+  min-height: min(1240px, calc(100vh - 2rem));
+}
+
+.auth-panel--register .auth-panel__heading {
+  margin-top: clamp(5.6rem, 11vw, 7.1rem);
+}
+
+.auth-check--terms {
+  align-items: center;
+  flex-wrap: wrap;
+}
