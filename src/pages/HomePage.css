@@ -1,0 +1,155 @@
+.home {
+  min-height: 100vh;
+  background: #0e0f11;
+  color: #ffffff;
+}
+
+.home__bar {
+  display: flex;
+  width: 100%;
+  min-height: 84px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  background: #0e0f11;
+  padding: 1rem clamp(1rem, 4vw, 3rem);
+}
+
+.home__brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.home__brand img {
+  display: block;
+  width: clamp(150px, 22vw, 260px);
+  height: auto;
+}
+
+.home__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.home__nav-link,
+.home__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.home__nav-link {
+  min-width: 124px;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+}
+
+.home__nav-link:hover,
+.home__nav-link:focus-visible {
+  color: #e1dcc9;
+  box-shadow: 0 0 16px rgb(225 220 201 / 22%);
+  transform: scale(1.03);
+}
+
+.home__hero {
+  position: relative;
+  display: grid;
+  min-height: calc(100vh - 84px);
+  place-items: center;
+  overflow: hidden;
+  padding: 4rem 1.25rem;
+  background: #0e0f11;
+}
+
+.home__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(58vw, 560px);
+  max-width: 86%;
+  height: auto;
+  opacity: 0.36;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 32px rgb(255 255 255 / 10%));
+  pointer-events: none;
+}
+
+.home__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  max-width: 980px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+.home__content h1 {
+  margin: 0;
+  color: #ffffff;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: clamp(2rem, 7vw, 5.4rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px rgb(255 255 255 / 12%),
+    0 5px 0 #000000;
+}
+
+.home__cta {
+  min-width: min(100%, 280px);
+  border-color: #494932;
+  padding: 1rem 1.6rem;
+  color: #494932;
+  font-size: 1rem;
+}
+
+.home__cta:hover,
+.home__cta:focus-visible {
+  color: #e1dcc9;
+  border-color: #494932;
+  box-shadow:
+    0 0 12px rgb(73 73 50 / 90%),
+    0 0 34px rgb(73 73 50 / 50%);
+  transform: scale(1.06);
+}
+
+@media (max-width: 640px) {
+  .home__bar {
+    min-height: 132px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home__brand {
+    justify-content: center;
+  }
+
+  .home__nav {
+    justify-content: center;
+  }
+
+  .home__nav-link {
+    min-width: 0;
+    flex: 1;
+  }
+}

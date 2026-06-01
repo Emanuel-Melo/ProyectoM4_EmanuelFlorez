@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: center;
   min-width: 180px;
-  border: 0;
-  border-radius: 8px;
+  border: 2px solid #412d15;
+  border-radius: 0;
   padding: 0.9rem 1.6rem;
-  background: #412d15;
-  color: #ffffff;
+  background: transparent;
+  color: #412d15;
   cursor: pointer;
   font-size: 1.2rem;
   font-weight: 700;
@@ -22,17 +22,19 @@
 .btn:hover:not(:disabled),
 .btn:focus-visible:not(:disabled) {
   transform: scale(1.04);
-  box-shadow: 0 10px 22px rgb(31 21 12 / 22%);
+  box-shadow: 0 0 18px rgb(65 45 21 / 32%);
 }
 
 .btn:active:not(:disabled) {
-  background: #1f150c;
+  border-color: #1f150c;
+  color: #1f150c;
   transform: scale(1.02);
 }
 
 .btn:disabled {
-  background: #ffffff;
-  color: #412d15;
+  border-color: #ffffff;
+  background: transparent;
+  color: #ffffff;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
