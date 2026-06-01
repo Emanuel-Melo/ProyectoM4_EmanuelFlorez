@@ -15,6 +15,37 @@
   font: inherit;
 }
 
+.command button {
+  position: relative;
+  overflow: hidden;
+}
+
+.command button:hover:not(:disabled),
+.command button:focus-visible:not(:disabled) {
+  cursor: crosshair;
+}
+
+.command button:active:not(:disabled)::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgb(225 220 201 / 82%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #000000 0 24%, transparent 27%),
+    radial-gradient(circle, rgb(225 220 201 / 80%) 0 3px, transparent 4px),
+    repeating-conic-gradient(from 0deg, transparent 0 22deg, rgb(225 220 201 / 44%) 23deg 25deg);
+  box-shadow:
+    0 0 0 5px rgb(0 0 0 / 34%),
+    0 0 18px rgb(225 220 201 / 32%),
+    inset 0 0 10px rgb(0 0 0 / 90%);
+  content: "";
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
 .command__sidebar {
   position: sticky;
   top: 0;
