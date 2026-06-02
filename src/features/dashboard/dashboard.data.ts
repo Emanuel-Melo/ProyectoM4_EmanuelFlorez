@@ -10,10 +10,46 @@ export const navItems: Array<{ id: DashboardSectionId; label: string; icon: stri
 ];
 
 export const missions: Mission[] = [
-  { name: "Operacion Eclipse", description: "Reconocimiento de zona", progress: 75, priority: "Alta" },
-  { name: "Mision Centinela", description: "Proteccion de activos", progress: 50, priority: "Media" },
-  { name: "Operacion Titan", description: "Infiltracion y extraccion", progress: 25, priority: "Alta" },
-  { name: "Mision Horizonte", description: "Monitoreo de inteligencia", progress: 90, priority: "Baja" },
+  {
+    id: "demo-eclipse",
+    name: "Operacion Eclipse",
+    description: "Reconocimiento de zona",
+    startDate: "2024-05-12",
+    progress: 75,
+    totalTasks: 5,
+    completedTasks: 3,
+    priority: "Alta",
+  },
+  {
+    id: "demo-centinela",
+    name: "Mision Centinela",
+    description: "Proteccion de activos",
+    startDate: "2024-05-08",
+    progress: 50,
+    totalTasks: 4,
+    completedTasks: 2,
+    priority: "Media",
+  },
+  {
+    id: "demo-titan",
+    name: "Operacion Titan",
+    description: "Infiltracion y extraccion",
+    startDate: "2024-05-10",
+    progress: 25,
+    totalTasks: 4,
+    completedTasks: 1,
+    priority: "Alta",
+  },
+  {
+    id: "demo-horizonte",
+    name: "Mision Horizonte",
+    description: "Monitoreo de inteligencia",
+    startDate: "2024-05-05",
+    progress: 90,
+    totalTasks: 5,
+    completedTasks: 4,
+    priority: "Baja",
+  },
 ];
 
 export const objectives = [
@@ -24,7 +60,34 @@ export const objectives = [
 ];
 
 export const scheduledTasks: ScheduledTask[] = [
-  { time: "09:00", title: "Reunion de estrategia", day: "Hoy" },
-  { time: "11:30", title: "Informe de operaciones", day: "Hoy" },
-  { time: "14:00", title: "Entrenamiento de equipo", day: "Manana" },
+  {
+    id: "demo-task-1",
+    title: "Reunion de estrategia",
+    description: "Revision de prioridades operativas.",
+    date: "2026-06-01",
+    time: "09:00",
+    category: "Operaciones",
+    priority: "Media",
+    completed: false,
+  },
+  {
+    id: "demo-task-2",
+    title: "Informe de operaciones",
+    description: "Enviar avance del turno.",
+    date: "2026-06-01",
+    time: "11:30",
+    category: "Administracion",
+    priority: "Alta",
+    completed: false,
+  },
+  {
+    id: "demo-task-3",
+    title: "Entrenamiento de equipo",
+    description: "Preparacion de unidad.",
+    date: "2026-06-02",
+    time: "14:00",
+    category: "Operaciones",
+    priority: "Baja",
+    completed: false,
+  },
 ];

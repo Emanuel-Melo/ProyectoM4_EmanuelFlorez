@@ -347,6 +347,13 @@
   gap: 0.75rem;
 }
 
+.mission-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
 .mission-row,
 .task-preview article,
 .objective,
@@ -359,6 +366,13 @@
   padding: 0.75rem 0;
 }
 
+.mission-row--editable {
+  grid-template-columns: auto minmax(0, 1fr) minmax(260px, 0.85fr) auto auto;
+  border: 1px solid rgb(73 73 50 / 20%);
+  background: rgb(0 0 0 / 24%);
+  padding: 1rem;
+}
+
 .mission-row__icon {
   display: grid;
   width: 42px;
@@ -366,6 +380,69 @@
   place-items: center;
   border: 1px solid rgb(73 73 50 / 18%);
   color: #494932;
+}
+
+.mission-row__progress {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.mission-row__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 0.6rem;
+}
+
+.mission-row__controls label {
+  display: grid;
+  gap: 0.35rem;
+  color: #494932;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mission-row__controls input {
+  min-height: 40px;
+  border: 1px solid rgb(73 73 50 / 52%);
+  background: rgb(0 0 0 / 28%);
+  color: #e1dcc9;
+  padding: 0.55rem;
+}
+
+.mission-status {
+  color: #9aa06c;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mission-status--done {
+  color: #ffffff;
+}
+
+.mission-empty {
+  display: grid;
+  min-height: 240px;
+  place-content: center;
+  gap: 0.55rem;
+  border: 1px dashed rgb(73 73 50 / 42%);
+  background: rgb(0 0 0 / 22%);
+  padding: 2rem;
+  text-align: center;
+}
+
+.mission-empty strong {
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+}
+
+.mission-empty span {
+  color: rgb(225 220 201 / 62%);
 }
 
 .mission-row strong,
@@ -579,13 +656,19 @@
 }
 
 .command-form input,
-.command-form textarea {
+.command-form textarea,
+.command-form select {
   min-height: 48px;
   border: 1px solid rgb(73 73 50 / 58%);
   background: transparent;
   color: #e1dcc9;
   outline: 0;
   padding: 0.8rem;
+}
+
+.command-form select option {
+  background: #050606;
+  color: #e1dcc9;
 }
 
 .command-form textarea {
@@ -708,6 +791,7 @@
   .command__grid,
   .summary-grid,
   .section-two,
+  .mission-stats,
   .reports-grid {
     grid-template-columns: 1fr;
   }
@@ -721,8 +805,18 @@
   }
 
   .mission-row .progress-line,
-  .mission-row .priority {
+  .mission-row .priority,
+  .mission-row__progress,
+  .mission-status {
     grid-column: 2;
+  }
+
+  .mission-row--editable {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .mission-row__controls {
+    grid-template-columns: 1fr;
   }
 
   .progress-layout {

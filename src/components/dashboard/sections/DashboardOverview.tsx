@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import centerLogo from "../../../Orion task/Logo sin fondo orion task.png";
-import type { DashboardSectionId } from "../../../features/dashboard/dashboard.types";
+import type { DashboardSectionId, Mission, ScheduledTask } from "../../../features/dashboard/dashboard.types";
 import CardHeader from "../CardHeader";
 import Metric from "../Metric";
 import MiniCalendar from "../MiniCalendar";
@@ -9,16 +9,29 @@ import ProgressBar from "../ProgressBar";
 import TaskPreview from "../TaskPreview";
 
 type DashboardOverviewProps = {
+  missions: Mission[];
+  tasks: ScheduledTask[];
+  missionAverage: number;
+  taskAverage: number;
   reportScore: number;
   completedObjectives: number;
+  totalObjectives: number;
   setActiveSection: (section: DashboardSectionId) => void;
 };
 
 export default function DashboardOverview({
+  missions,
+  tasks,
+  missionAverage,
+  taskAverage,
   reportScore,
   completedObjectives,
+  totalObjectives,
   setActiveSection,
 }: DashboardOverviewProps) {
+  const activeMissions = missions.filter((mission) => mission.progress < 100).length;
+  const pendingTasks = tasks.filter((task) => !task.completed).length;
+
   return (
     <div className="command__grid">
       <section className="command-card command-card--hero">
@@ -40,16 +53,16 @@ export default function DashboardOverview({
           </select>
         </header>
         <div className="summary-grid">
-          <Metric icon="O" value="07" label="Misiones activas" />
-          <Metric icon="#" value="14" label="Tareas pendientes" />
-          <Metric icon="*" value={`${completedObjectives}/4`} label="Objetivos listos" />
+          <Metric icon="O" value={String(activeMissions).padStart(2, "0")} label="Misiones activas" />
+          <Metric icon="#" value={String(pendingTasks).padStart(2, "0")} label="Tareas pendientes" />
+          <Metric icon="*" value={`${completedObjectives}/${totalObjectives}`} label="Objetivos listos" />
           <Metric icon="%" value={`${reportScore}%`} label="Eficiencia" />
         </div>
       </section>
 
       <section className="command-card">
         <CardHeader title="Misiones activas" action="Ver todas >" onClick={() => setActiveSection("missions")} />
-        <MissionList compact />
+        <MissionList missions={missions} compact />
       </section>
 
       <section className="command-card">
@@ -70,9 +83,9 @@ export default function DashboardOverview({
             <span>Completado</span>
           </div>
           <div className="progress-bars">
-            <ProgressBar label="Misiones" value={62} />
+            <ProgressBar label="Misiones" value={missionAverage} />
             <ProgressBar label="Objetivos" value={45} />
-            <ProgressBar label="Tareas" value={71} />
+            <ProgressBar label="Tareas" value={taskAverage} />
             <ProgressBar label="Inteligencia" value={58} />
           </div>
         </div>
@@ -98,7 +111,7 @@ export default function DashboardOverview({
 
       <section className="command-card">
         <CardHeader title="Misiones criticas" action="Ver todas >" />
-        <MissionList compact critical />
+        <MissionList missions={missions} compact critical />
       </section>
     </div>
   );
