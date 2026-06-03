@@ -716,6 +716,214 @@
   border: 1px solid rgb(73 73 50 / 12%);
 }
 
+.calendar-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 1rem;
+}
+
+.calendar-toolbar {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 54px 54px minmax(180px, 1fr) auto;
+  align-items: center;
+  border: 1px solid rgb(73 73 50 / 28%);
+  background: rgb(0 0 0 / 20%);
+}
+
+.calendar-toolbar button {
+  min-height: 54px;
+  border: 0;
+  border-right: 1px solid rgb(73 73 50 / 28%);
+  background: transparent;
+  color: #e1dcc9;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+}
+
+.calendar-toolbar strong {
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.1rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-legend {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 1rem;
+  border-left: 1px solid rgb(73 73 50 / 28%);
+  padding: 0 1rem;
+  color: rgb(225 220 201 / 70%);
+  font-size: 0.78rem;
+}
+
+.calendar-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #494932;
+}
+
+.calendar-dot--mission {
+  background: #8a67bd;
+}
+
+.calendar-dot--objective {
+  background: #42a694;
+}
+
+.calendar-board {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(110px, 1fr));
+  border-top: 1px solid rgb(73 73 50 / 24%);
+  border-left: 1px solid rgb(73 73 50 / 24%);
+}
+
+.calendar-board__weekday {
+  border-right: 1px solid rgb(73 73 50 / 24%);
+  padding: 0.8rem;
+  color: rgb(225 220 201 / 62%);
+  font-size: 0.78rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  display: grid;
+  align-content: start;
+  min-height: 128px;
+  border: 0;
+  border-right: 1px solid rgb(73 73 50 / 24%);
+  border-bottom: 1px solid rgb(73 73 50 / 24%);
+  background:
+    linear-gradient(180deg, rgb(225 220 201 / 3%), transparent),
+    rgb(0 0 0 / 10%);
+  color: #e1dcc9;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  text-align: left;
+}
+
+.calendar-day > span:first-child {
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+}
+
+.calendar-day--muted {
+  opacity: 0.32;
+}
+
+.calendar-day--selected {
+  border: 1px solid #494932;
+  box-shadow:
+    inset 0 0 24px rgb(73 73 50 / 18%),
+    0 0 16px rgb(73 73 50 / 24%);
+}
+
+.calendar-activity {
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid rgb(73 73 50 / 16%);
+  background: rgb(0 0 0 / 28%);
+  padding: 0.35rem;
+}
+
+.calendar-activity small {
+  overflow: hidden;
+  color: rgb(225 220 201 / 82%);
+  font-size: 0.7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-activity::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #494932;
+  content: "";
+}
+
+.calendar-activity--mision::before {
+  background: #8a67bd;
+}
+
+.calendar-activity--objetivo::before {
+  background: #42a694;
+}
+
+.calendar-day em {
+  color: #e1dcc9;
+  font-style: normal;
+  font-size: 0.75rem;
+}
+
+.calendar-detail {
+  border: 1px solid rgb(73 73 50 / 24%);
+  background: rgb(0 0 0 / 22%);
+  padding: 1rem;
+}
+
+.calendar-detail h2 {
+  margin-top: 0;
+}
+
+.calendar-detail p {
+  color: #494932;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.calendar-detail article {
+  display: grid;
+  gap: 0.35rem;
+  border-bottom: 1px solid rgb(73 73 50 / 20%);
+  padding: 0.85rem 0;
+}
+
+.calendar-detail article strong {
+  color: #ffffff;
+}
+
+.calendar-detail article small,
+.calendar-detail div > span {
+  color: rgb(225 220 201 / 62%);
+}
+
+.calendar-summary {
+  display: grid;
+  grid-column: 2;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+.calendar-summary article {
+  border: 1px solid rgb(73 73 50 / 28%);
+  background: rgb(0 0 0 / 20%);
+  padding: 0.9rem;
+}
+
+.calendar-summary span,
+.calendar-summary small {
+  color: rgb(225 220 201 / 62%);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.calendar-summary strong {
+  display: block;
+  margin: 0.35rem 0;
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.6rem;
+}
+
 .reports-grid {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -792,8 +1000,30 @@
   .summary-grid,
   .section-two,
   .mission-stats,
-  .reports-grid {
+  .reports-grid,
+  .calendar-shell,
+  .calendar-summary {
     grid-template-columns: 1fr;
+  }
+
+  .calendar-toolbar {
+    grid-template-columns: 48px 48px 1fr;
+  }
+
+  .calendar-legend {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgb(73 73 50 / 28%);
+    border-left: 0;
+    padding: 0.9rem;
+  }
+
+  .calendar-board {
+    overflow-x: auto;
+    grid-template-columns: repeat(7, minmax(126px, 1fr));
+  }
+
+  .calendar-summary {
+    grid-column: auto;
   }
 
   .command-card--hero img {

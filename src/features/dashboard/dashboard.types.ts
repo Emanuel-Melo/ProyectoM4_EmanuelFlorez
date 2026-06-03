@@ -2,6 +2,7 @@ export type DashboardSectionId = "dashboard" | "missions" | "objectives" | "task
 
 export type Mission = {
   id: string;
+  userId?: string;
   name: string;
   description: string;
   startDate: string;
@@ -13,6 +14,7 @@ export type Mission = {
 
 export type Objective = {
   id: string;
+  userId?: string;
   title: string;
   completed: boolean;
   createdAt: string;
@@ -21,6 +23,7 @@ export type Objective = {
 
 export type ScheduledTask = {
   id: string;
+  userId?: string;
   description: string;
   date: string;
   time: string;

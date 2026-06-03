@@ -76,6 +76,7 @@ function getMissionScore(mission: Mission) {
 
 export default function DashboardPage() {
   const { user, logout } = useAuthCtx();
+  const operatorName = user?.displayName || user?.email?.split("@")[0] || "Comandante";
   const [activeSection, setActiveSection] = useState<DashboardSectionId>("dashboard");
   const [missions, setMissions] = useState<Mission[]>(loadStoredMissions);
   const [objectives, setObjectives] = useState<Objective[]>(loadStoredObjectives);
@@ -215,7 +216,7 @@ export default function DashboardPage() {
           <div className="command__operator">
             <span className="command__avatar">07</span>
             <div>
-              <strong>Operador 07</strong>
+              <strong>Operador {operatorName}</strong>
               <small>{user?.email || "Comandante"}</small>
             </div>
             <button type="button" onClick={() => void logout()}>
@@ -260,9 +261,6 @@ export default function DashboardPage() {
         )}
         {activeSection === "reports" && (
           <ReportsSection
-            missions={missions}
-            objectives={objectives}
-            tasks={tasks}
             reportScore={reportScore}
             missionAverage={missionAverage}
             objectiveAverage={objectiveAverage}
