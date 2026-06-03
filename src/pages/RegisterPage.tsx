@@ -4,11 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import writtenLogo from "../Orion task/Escrito orion task.png";
 import centerLogo from "../Orion task/Logo sin fondo orion task.png";
 import { useAuthCtx } from "../context/AuthContext";
+import { getFirebaseAuthErrorMessage } from "../utils/firebaseErrors";
 import "./LoginPage.css";
 import "./RegisterPage.css";
 
 function getErrorMessage(error: unknown, fallback: string) {
-  return error instanceof Error ? error.message : fallback;
+  return getFirebaseAuthErrorMessage(error, fallback);
 }
 
 export default function RegisterPage() {

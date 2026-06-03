@@ -247,6 +247,7 @@ export default function DashboardPage() {
             completedObjectives={objectives.filter((objective) => objective.completed).length}
             totalObjectives={objectives.length}
             operatorName={operatorName}
+            operatorEmail={user?.email || undefined}
             setActiveSection={setActiveSection}
           />
         )}
@@ -278,6 +279,11 @@ export default function DashboardPage() {
             missionAverage={missionAverage}
             objectiveAverage={objectiveAverage}
             taskAverage={taskAverage}
+            operatorName={operatorName}
+            operatorEmail={user?.email || undefined}
+            missions={missions}
+            objectives={objectives}
+            tasks={tasks}
           />
         )}
       </section>

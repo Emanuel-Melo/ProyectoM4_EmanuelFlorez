@@ -398,6 +398,10 @@
   gap: 0.75rem;
 }
 
+.command-card--summary .report-request {
+  margin-top: 1rem;
+}
+
 .metric {
   display: flex;
   align-items: center;
@@ -1398,6 +1402,60 @@
   padding: 1.3rem;
 }
 
+.report-request {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgb(218 198 92 / 48%);
+  background:
+    linear-gradient(90deg, rgb(218 198 92 / 10%), transparent 46%),
+    rgb(0 0 0 / 26%);
+  box-shadow:
+    inset 0 0 22px rgb(218 198 92 / 6%),
+    0 0 18px rgb(0 0 0 / 20%);
+  padding: 1rem;
+}
+
+.report-request--compact {
+  padding: 0.85rem;
+}
+
+.report-request strong,
+.report-request span {
+  display: block;
+}
+
+.report-request strong {
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.report-request span {
+  margin-top: 0.35rem;
+  color: rgb(225 220 201 / 70%);
+  font-size: 0.86rem;
+}
+
+.report-request button {
+  min-width: 160px;
+  border: 1px solid rgb(218 198 92 / 70%);
+  background: rgb(218 198 92 / 12%);
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  padding: 0.85rem 1rem;
+  text-transform: uppercase;
+}
+
+.report-request button:disabled {
+  color: rgb(225 220 201 / 46%);
+  cursor: wait;
+}
+
 .report-note p {
   max-width: 860px;
   color: rgb(225 220 201 / 74%);
@@ -1559,6 +1617,15 @@
 
   .activity-list li {
     flex-direction: column;
+  }
+
+  .report-request {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .report-request button {
+    width: 100%;
   }
 
   .command-sync {

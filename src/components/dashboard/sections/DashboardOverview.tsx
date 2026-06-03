@@ -6,6 +6,7 @@ import Metric from "../Metric";
 import MiniCalendar from "../MiniCalendar";
 import MissionList from "../MissionList";
 import ProgressBar from "../ProgressBar";
+import ReportRequestButton from "../ReportRequestButton";
 import TaskPreview from "../TaskPreview";
 
 type DashboardOverviewProps = {
@@ -19,6 +20,7 @@ type DashboardOverviewProps = {
   completedObjectives: number;
   totalObjectives: number;
   operatorName: string;
+  operatorEmail?: string;
   setActiveSection: (section: DashboardSectionId) => void;
 };
 
@@ -65,6 +67,7 @@ export default function DashboardOverview({
   completedObjectives,
   totalObjectives,
   operatorName,
+  operatorEmail,
   setActiveSection,
 }: DashboardOverviewProps) {
   const activeMissions = missions.filter((mission) => mission.progress < 100).length;
@@ -98,6 +101,18 @@ export default function DashboardOverview({
           <Metric icon="*" value={`${completedObjectives}/${totalObjectives}`} label="Objetivos listos" />
           <Metric icon="%" value={`${reportScore}%`} label="Eficiencia" />
         </div>
+        <ReportRequestButton
+          compact
+          to={operatorEmail}
+          operatorName={operatorName}
+          reportScore={reportScore}
+          missionAverage={missionAverage}
+          objectiveAverage={objectiveAverage}
+          taskAverage={taskAverage}
+          missions={missions}
+          objectives={objectives}
+          tasks={tasks}
+        />
       </section>
 
       <section className="command-card">
