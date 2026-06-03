@@ -6,67 +6,24 @@ import MissionsSection from "../components/dashboard/sections/MissionsSection";
 import ObjectivesSection from "../components/dashboard/sections/ObjectivesSection";
 import ReportsSection from "../components/dashboard/sections/ReportsSection";
 import TasksSection from "../components/dashboard/sections/TasksSection";
-import { navItems, objectives as defaultObjectiveTitles } from "../features/dashboard/dashboard.data";
-import type { DashboardSectionId, Mission, Objective, ScheduledTask } from "../features/dashboard/dashboard.types";
 import { useAuthCtx } from "../context/AuthContext";
+import { navItems } from "../features/dashboard/dashboard.data";
+import {
+  createMissionForUser,
+  createObjectiveForUser,
+  createTaskForUser,
+  deleteObjectiveForUser,
+  deleteTaskForUser,
+  subscribeDashboardData,
+  updateMissionForUser,
+  updateObjectiveForUser,
+  updateTaskForUser,
+} from "../features/dashboard/dashboard.service";
+import type { DashboardSectionId, Mission, Objective, ScheduledTask } from "../features/dashboard/dashboard.types";
 import "./DashboardPage.css";
-
-const MISSIONS_STORAGE_KEY = "orion-task:missions";
-const OBJECTIVES_STORAGE_KEY = "orion-task:objectives";
-const TASKS_STORAGE_KEY = "orion-task:tasks";
 
 function getTodayKey() {
   return new Date().toISOString().slice(0, 10);
-}
-
-function loadStoredMissions(): Mission[] {
-  try {
-    const storedMissions = localStorage.getItem(MISSIONS_STORAGE_KEY);
-    if (!storedMissions) return [];
-
-    const parsedMissions = JSON.parse(storedMissions) as Mission[];
-    return Array.isArray(parsedMissions) ? parsedMissions : [];
-  } catch {
-    return [];
-  }
-}
-
-function loadStoredObjectives(): Objective[] {
-  const today = getTodayKey();
-
-  try {
-    const storedObjectives = localStorage.getItem(OBJECTIVES_STORAGE_KEY);
-    if (!storedObjectives) {
-      return defaultObjectiveTitles.map((title) => ({
-        id: crypto.randomUUID(),
-        title,
-        completed: false,
-        createdAt: today,
-        operativeDate: today,
-      }));
-    }
-
-    const parsedObjectives = JSON.parse(storedObjectives) as Objective[];
-    if (!Array.isArray(parsedObjectives)) return [];
-
-    return parsedObjectives.map((objective) =>
-      objective.operativeDate === today ? objective : { ...objective, completed: false, operativeDate: today },
-    );
-  } catch {
-    return [];
-  }
-}
-
-function loadStoredTasks(): ScheduledTask[] {
-  try {
-    const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
-    if (!storedTasks) return [];
-
-    const parsedTasks = JSON.parse(storedTasks) as ScheduledTask[];
-    return Array.isArray(parsedTasks) ? parsedTasks : [];
-  } catch {
-    return [];
-  }
 }
 
 function getMissionScore(mission: Mission) {
@@ -74,43 +31,65 @@ function getMissionScore(mission: Mission) {
   return (mission.progress + taskScore) / 2;
 }
 
+function getDashboardErrorMessage(error: Error) {
+  const message = error.message.toLowerCase();
+
+  if (message.includes("permission") || message.includes("denied")) {
+    return "Acceso denegado. Las reglas de Firestore no permiten leer o modificar estos datos.";
+  }
+
+  if (message.includes("unavailable") || message.includes("network") || message.includes("offline")) {
+    return "Error de conexion. Verifica internet o la disponibilidad de Firebase.";
+  }
+
+  return "Error del servidor. No se pudo sincronizar la informacion operativa.";
+}
+
 export default function DashboardPage() {
   const { user, logout } = useAuthCtx();
   const operatorName = user?.displayName || user?.email?.split("@")[0] || "Comandante";
   const [activeSection, setActiveSection] = useState<DashboardSectionId>("dashboard");
-  const [missions, setMissions] = useState<Mission[]>(loadStoredMissions);
-  const [objectives, setObjectives] = useState<Objective[]>(loadStoredObjectives);
-  const [tasks, setTasks] = useState<ScheduledTask[]>(loadStoredTasks);
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [objectives, setObjectives] = useState<Objective[]>([]);
+  const [tasks, setTasks] = useState<ScheduledTask[]>([]);
+  const [syncStatus, setSyncStatus] = useState<"loading" | "online" | "error">("loading");
+  const [syncMessage, setSyncMessage] = useState("Sincronizando datos del operador...");
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    localStorage.setItem(MISSIONS_STORAGE_KEY, JSON.stringify(missions));
-  }, [missions]);
+    if (!user) return;
 
-  useEffect(() => {
-    localStorage.setItem(OBJECTIVES_STORAGE_KEY, JSON.stringify(objectives));
-  }, [objectives]);
+    const unsubscribe = subscribeDashboardData(user.uid, {
+      onData: (dashboardData) => {
+        setMissions(dashboardData.missions);
+        setObjectives(dashboardData.objectives);
+        setTasks(dashboardData.tasks);
+        setSyncStatus("online");
+        setSyncMessage("Datos sincronizados con Firebase.");
+      },
+      onError: (error) => {
+        setSyncStatus("error");
+        setSyncMessage(getDashboardErrorMessage(error));
+      },
+    });
 
-  useEffect(() => {
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
-  }, [tasks]);
+    return unsubscribe;
+  }, [user]);
 
   const missionAverage = useMemo(() => {
     if (missions.length === 0) return 0;
-
     const totalScore = missions.reduce((total, mission) => total + getMissionScore(mission), 0);
     return Math.round(totalScore / missions.length);
   }, [missions]);
 
   const objectiveAverage = useMemo(() => {
     if (objectives.length === 0) return 0;
-
     const completedCount = objectives.filter((objective) => objective.completed).length;
     return Math.round((completedCount / objectives.length) * 100);
   }, [objectives]);
 
   const taskAverage = useMemo(() => {
     if (tasks.length === 0) return 0;
-
     const completedCount = tasks.filter((task) => task.completed).length;
     return Math.round((completedCount / tasks.length) * 100);
   }, [tasks]);
@@ -119,65 +98,76 @@ export default function DashboardPage() {
     return Math.round(missionAverage * 0.4 + objectiveAverage * 0.3 + taskAverage * 0.3);
   }, [missionAverage, objectiveAverage, taskAverage]);
 
-  function createMission(mission: Mission) {
-    setMissions((currentMissions) => [mission, ...currentMissions]);
+  async function runDashboardAction(action: () => Promise<void>, message: string) {
+    setActionMessage("Procesando operacion...");
+    try {
+      await action();
+      setActionMessage(message);
+      window.setTimeout(() => setActionMessage(null), 2600);
+    } catch (error) {
+      setSyncStatus("error");
+      setSyncMessage(getDashboardErrorMessage(error as Error));
+      setActionMessage(null);
+    }
   }
 
-  function updateMission(missionId: string, updates: Partial<Mission>) {
-    setMissions((currentMissions) =>
-      currentMissions.map((mission) => {
-        if (mission.id !== missionId) return mission;
+  async function createMission(mission: Mission) {
+    if (!user) return;
+    await runDashboardAction(() => createMissionForUser(user.uid, mission), "Mision creada y guardada en Firebase.");
+  }
 
-        const updatedMission = { ...mission, ...updates };
-        if (mission.progress < 100 && updatedMission.progress === 100) {
-          window.alert(`${updatedMission.name} completada.`);
-        }
+  async function updateMission(missionId: string, updates: Partial<Mission>) {
+    const mission = missions.find((currentMission) => currentMission.id === missionId);
+    const willComplete = mission ? mission.progress < 100 && updates.progress === 100 : false;
 
-        return updatedMission;
-      }),
+    await runDashboardAction(
+      () => updateMissionForUser(missionId, updates),
+      willComplete ? `${mission?.name || "Mision"} completada.` : "Mision actualizada en Firebase.",
     );
   }
 
-  function createObjective(title: string) {
+  async function createObjective(title: string) {
+    if (!user) return;
     const today = getTodayKey();
-    setObjectives((currentObjectives) => [
-      {
-        id: crypto.randomUUID(),
-        title,
-        completed: false,
-        createdAt: today,
-        operativeDate: today,
-      },
-      ...currentObjectives,
-    ]);
-  }
-
-  function toggleObjective(objectiveId: string) {
-    setObjectives((currentObjectives) =>
-      currentObjectives.map((objective) =>
-        objective.id === objectiveId ? { ...objective, completed: !objective.completed } : objective,
-      ),
+    await runDashboardAction(
+      () =>
+        createObjectiveForUser(user.uid, {
+          title,
+          completed: false,
+          createdAt: today,
+          operativeDate: today,
+        }),
+      "Objetivo creado y guardado en Firebase.",
     );
   }
 
-  function deleteObjective(objectiveId: string) {
+  async function toggleObjective(objectiveId: string) {
+    const objective = objectives.find((currentObjective) => currentObjective.id === objectiveId);
+    if (!objective) return;
+
+    await runDashboardAction(
+      () => updateObjectiveForUser(objectiveId, { completed: !objective.completed }),
+      "Objetivo actualizado en Firebase.",
+    );
+  }
+
+  async function deleteObjective(objectiveId: string) {
     if (!window.confirm("Desea eliminar este objetivo?")) return;
-    setObjectives((currentObjectives) => currentObjectives.filter((objective) => objective.id !== objectiveId));
+    await runDashboardAction(() => deleteObjectiveForUser(objectiveId), "Objetivo eliminado de Firebase.");
   }
 
-  function createTask(task: ScheduledTask) {
-    setTasks((currentTasks) => [task, ...currentTasks]);
+  async function createTask(task: ScheduledTask) {
+    if (!user) return;
+    await runDashboardAction(() => createTaskForUser(user.uid, task), "Tarea guardada en Firebase.");
   }
 
-  function updateTask(taskId: string, updates: Partial<ScheduledTask>) {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) => (task.id === taskId ? { ...task, ...updates } : task)),
-    );
+  async function updateTask(taskId: string, updates: Partial<ScheduledTask>) {
+    await runDashboardAction(() => updateTaskForUser(taskId, updates), "Tarea actualizada en Firebase.");
   }
 
-  function deleteTask(taskId: string) {
+  async function deleteTask(taskId: string) {
     if (!window.confirm("Desea eliminar esta tarea?")) return;
-    setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
+    await runDashboardAction(() => deleteTaskForUser(taskId), "Tarea eliminada de Firebase.");
   }
 
   return (
@@ -225,7 +215,27 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {activeSection === "dashboard" && (
+        <div className={`command-sync command-sync--${syncStatus}`} role={syncStatus === "error" ? "alert" : "status"}>
+          <span>{syncStatus === "loading" ? "Sincronizando" : syncStatus === "error" ? "Alerta" : "Firebase online"}</span>
+          <p>{syncMessage}</p>
+        </div>
+
+        {actionMessage && (
+          <div className="command-sync command-sync--action" role="status">
+            <span>Operacion</span>
+            <p>{actionMessage}</p>
+          </div>
+        )}
+
+        {syncStatus === "loading" && (
+          <section className="command-loading" aria-label="Cargando datos">
+            <div />
+            <strong>Estableciendo enlace seguro con Firebase</strong>
+            <span>Recuperando misiones, objetivos y tareas de esta cuenta.</span>
+          </section>
+        )}
+
+        {syncStatus !== "loading" && activeSection === "dashboard" && (
           <DashboardOverview
             missions={missions}
             tasks={tasks}
@@ -237,7 +247,7 @@ export default function DashboardPage() {
             setActiveSection={setActiveSection}
           />
         )}
-        {activeSection === "missions" && (
+        {syncStatus !== "loading" && activeSection === "missions" && (
           <MissionsSection
             missions={missions}
             missionAverage={missionAverage}
@@ -245,7 +255,7 @@ export default function DashboardPage() {
             onUpdateMission={updateMission}
           />
         )}
-        {activeSection === "objectives" && (
+        {syncStatus !== "loading" && activeSection === "objectives" && (
           <ObjectivesSection
             objectives={objectives}
             onCreateObjective={createObjective}
@@ -253,13 +263,13 @@ export default function DashboardPage() {
             onDeleteObjective={deleteObjective}
           />
         )}
-        {activeSection === "tasks" && (
+        {syncStatus !== "loading" && activeSection === "tasks" && (
           <TasksSection tasks={tasks} onCreateTask={createTask} onUpdateTask={updateTask} onDeleteTask={deleteTask} />
         )}
-        {activeSection === "calendar" && (
+        {syncStatus !== "loading" && activeSection === "calendar" && (
           <CalendarSection missions={missions} objectives={objectives} tasks={tasks} />
         )}
-        {activeSection === "reports" && (
+        {syncStatus !== "loading" && activeSection === "reports" && (
           <ReportsSection
             reportScore={reportScore}
             missionAverage={missionAverage}

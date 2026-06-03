@@ -39,6 +39,13 @@ function sortByNewest<T extends { id: string }>(items: T[]) {
   return [...items].reverse();
 }
 
+function withoutClientFields<T extends { id?: string; userId?: string }>(item: T) {
+  const copy = { ...item };
+  delete copy.id;
+  delete copy.userId;
+  return copy;
+}
+
 export function subscribeDashboardData(userId: string, { onData, onError }: DashboardSubscription): Unsubscribe {
   const dashboardData: DashboardData = {
     missions: [],
@@ -85,13 +92,13 @@ export function subscribeDashboardData(userId: string, { onData, onError }: Dash
 }
 
 export async function createMissionForUser(userId: string, mission: Mission) {
-  const { id: _id, userId: _userId, ...missionData } = mission;
+  const missionData = withoutClientFields(mission);
   const payload: FirestoreMission = { ...missionData, userId };
   await addDoc(collection(db, "missions"), payload);
 }
 
 export async function updateMissionForUser(missionId: string, updates: Partial<Mission>) {
-  const { id: _id, userId: _userId, ...missionUpdates } = updates;
+  const missionUpdates = withoutClientFields(updates);
   await updateDoc(doc(db, "missions", missionId), missionUpdates);
 }
 
@@ -101,7 +108,7 @@ export async function createObjectiveForUser(userId: string, objective: Omit<Obj
 }
 
 export async function updateObjectiveForUser(objectiveId: string, updates: Partial<Objective>) {
-  const { id: _id, userId: _userId, ...objectiveUpdates } = updates;
+  const objectiveUpdates = withoutClientFields(updates);
   await updateDoc(doc(db, "objectives", objectiveId), objectiveUpdates);
 }
 
@@ -110,13 +117,13 @@ export async function deleteObjectiveForUser(objectiveId: string) {
 }
 
 export async function createTaskForUser(userId: string, task: ScheduledTask) {
-  const { id: _id, userId: _userId, ...taskData } = task;
+  const taskData = withoutClientFields(task);
   const payload: FirestoreTask = { ...taskData, userId };
   await addDoc(collection(db, "scheduledTasks"), payload);
 }
 
 export async function updateTaskForUser(taskId: string, updates: Partial<ScheduledTask>) {
-  const { id: _id, userId: _userId, ...taskUpdates } = updates;
+  const taskUpdates = withoutClientFields(updates);
   await updateDoc(doc(db, "scheduledTasks", taskId), taskUpdates);
 }
 
