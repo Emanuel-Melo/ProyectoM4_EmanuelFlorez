@@ -185,22 +185,27 @@ export default function TasksSection({ tasks, onCreateTask, onUpdateTask, onDele
 
         <div className="tasks-panel">
           <header className="tasks-panel__header">
-            <h2>Tareas pendientes</h2>
-            <div className="tasks-filters">
-              {(["Todas", "Hoy", "Proximas", "Completadas"] as TaskFilter[]).map((filterOption) => (
-                <button
-                  className={filter === filterOption ? "tasks-filters__button tasks-filters__button--active" : "tasks-filters__button"}
-                  key={filterOption}
-                  type="button"
-                  onClick={() => {
-                    setFilter(filterOption);
-                    setPage(1);
-                  }}
-                >
-                  {filterOption}
-                </button>
-              ))}
+            <div>
+              <h2>Tareas agendadas</h2>
+              <div className="tasks-filters" aria-label="Filtrar tareas">
+                {(["Todas", "Hoy", "Proximas", "Completadas"] as TaskFilter[]).map((filterOption) => (
+                  <button
+                    className={
+                      filter === filterOption ? "tasks-filters__button tasks-filters__button--active" : "tasks-filters__button"
+                    }
+                    key={filterOption}
+                    type="button"
+                    onClick={() => {
+                      setFilter(filterOption);
+                      setPage(1);
+                    }}
+                  >
+                    {filterOption}
+                  </button>
+                ))}
+              </div>
             </div>
+            <span className="tasks-panel__filter">Filtrar</span>
           </header>
 
           <div className="task-timeline">
@@ -213,25 +218,39 @@ export default function TasksSection({ tasks, onCreateTask, onUpdateTask, onDele
 
             {visibleTasks.map((task) => (
               <article className={task.completed ? "task-row task-row--done" : "task-row"} key={task.id}>
-                <span className="task-row__node" aria-hidden="true" />
-                <strong>{task.time}</strong>
-                <div>
-                  <span>{task.title}</span>
-                  <small>{getDateLabel(task.date)}</small>
+                <div className="task-row__time">
+                  <span className="task-row__node" aria-hidden="true" />
+                  <strong>{task.time}</strong>
                 </div>
-                <span className={`task-priority task-priority--${task.priority.toLowerCase()}`}>{task.priority}</span>
-                <button type="button" onClick={() => editTask(task)}>
-                  Editar
-                </button>
-                <button type="button" onClick={() => onDeleteTask(task.id)}>
-                  Eliminar
-                </button>
-                <input
-                  aria-label={`Completar ${task.title}`}
-                  checked={task.completed}
-                  type="checkbox"
-                  onChange={() => onUpdateTask(task.id, { completed: !task.completed })}
-                />
+                <div className="task-row__card">
+                  <div className="task-row__content">
+                    <span>{task.title}</span>
+                    <small>{getDateLabel(task.date)}</small>
+                  </div>
+                  <span className={`task-priority task-priority--${task.priority.toLowerCase()}`}>{task.priority}</span>
+                  <div className="task-row__actions">
+                    <button className="task-row__action" type="button" onClick={() => editTask(task)} aria-label={`Editar ${task.title}`}>
+                      Editar
+                    </button>
+                    <button
+                      className="task-row__action task-row__action--danger"
+                      type="button"
+                      onClick={() => onDeleteTask(task.id)}
+                      aria-label={`Eliminar ${task.title}`}
+                    >
+                      Eliminar
+                    </button>
+                    <label className="task-row__check">
+                      <input
+                        aria-label={`Completar ${task.title}`}
+                        checked={task.completed}
+                        type="checkbox"
+                        onChange={() => onUpdateTask(task.id, { completed: !task.completed })}
+                      />
+                      <span aria-hidden="true" />
+                    </label>
+                  </div>
+                </div>
               </article>
             ))}
           </div>
@@ -241,8 +260,10 @@ export default function TasksSection({ tasks, onCreateTask, onUpdateTask, onDele
               &lt;
             </button>
             <span>
-              {currentPage} / {totalPages}
+              {currentPage}
             </span>
+            {totalPages > 1 && <small>...</small>}
+            {totalPages > 1 && <span>{totalPages}</span>}
             <button disabled={currentPage === totalPages} type="button" onClick={() => setPage((current) => current + 1)}>
               &gt;
             </button>

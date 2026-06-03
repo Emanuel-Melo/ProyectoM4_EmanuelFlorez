@@ -1,23 +1,31 @@
-import { scheduledTasks } from "../../features/dashboard/dashboard.data";
+import type { ScheduledTask } from "../../features/dashboard/dashboard.types";
 
-export default function TaskPreview() {
-  const previewTasks = scheduledTasks.concat([
-    {
-      id: "preview-extra-task",
-      time: "16:00",
-      title: "Verificar personal disponible",
-      description: "Revision de equipo",
-      date: new Date().toISOString().slice(0, 10),
-      category: "Operaciones",
-      priority: "Media",
-      completed: false,
-    },
-  ]);
+type TaskPreviewProps = {
+  tasks: ScheduledTask[];
+};
+
+function sortTasks(tasks: ScheduledTask[]) {
+  return [...tasks].sort((firstTask, secondTask) =>
+    `${firstTask.date}T${firstTask.time}`.localeCompare(`${secondTask.date}T${secondTask.time}`),
+  );
+}
+
+export default function TaskPreview({ tasks }: TaskPreviewProps) {
+  const previewTasks = sortTasks(tasks.filter((task) => !task.completed)).slice(0, 4);
+
+  if (previewTasks.length === 0) {
+    return (
+      <div className="mission-empty mission-empty--compact">
+        <strong>Sin tareas pendientes</strong>
+        <span>Las tareas nuevas apareceran aqui.</span>
+      </div>
+    );
+  }
 
   return (
     <div className="task-preview">
       {previewTasks.map((task) => (
-        <article key={`${task.time}-${task.title}`}>
+        <article key={task.id}>
           <span />
           <div>
             <strong>{task.title}</strong>

@@ -238,12 +238,15 @@ export default function DashboardPage() {
         {syncStatus !== "loading" && activeSection === "dashboard" && (
           <DashboardOverview
             missions={missions}
+            objectives={objectives}
             tasks={tasks}
             missionAverage={missionAverage}
+            objectiveAverage={objectiveAverage}
             taskAverage={taskAverage}
             reportScore={reportScore}
             completedObjectives={objectives.filter((objective) => objective.completed).length}
             totalObjectives={objectives.length}
+            operatorName={operatorName}
             setActiveSection={setActiveSection}
           />
         )}
