@@ -86,6 +86,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await signInWithPopup(auth, provider);
     } catch (error) {
       const authError = error as { code?: string };
+
+      if (authError.code === "auth/unauthorized-domain") {
+        // eslint-disable-next-line no-console
+        console.error(
+          "Firebase auth unauthorized domain:",
+          window.location.origin,
+          "- Verifica que este dominio esté autorizado en Firebase Auth."
+        );
+        throw error;
+      }
+
       if (
         authError.code === "auth/popup-blocked" ||
         authError.code === "auth/cancelled-popup-request" ||

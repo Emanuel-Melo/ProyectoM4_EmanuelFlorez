@@ -12,7 +12,7 @@ const authErrorMessages: Record<string, string> = {
   "auth/popup-blocked": "El navegador bloqueo el popup de Google. Permite popups y vuelve a intentarlo.",
   "auth/cancelled-popup-request": "El popup de Google fue cancelado por el navegador. Intenta de nuevo.",
   "auth/operation-not-supported-in-this-environment": "Este navegador no soporta el flujo de auth con popup. Se usara redireccion.",
-  "auth/unauthorized-domain": "El dominio no esta autorizado en Firebase. Verifica la configuracion de Auth.",
+  "auth/unauthorized-domain": "Dominio no autorizado en Firebase. Agrega el dominio actual a Auth > Dominios autorizados.",
   "auth/too-many-requests": "Demasiados intentos fallidos. Espera unos minutos antes de intentar otra vez.",
   "auth/user-disabled": "Esta cuenta fue deshabilitada. Contacta al administrador.",
   "auth/user-not-found": "No existe una cuenta registrada con este correo.",

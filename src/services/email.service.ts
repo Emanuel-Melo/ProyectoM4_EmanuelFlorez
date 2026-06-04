@@ -31,10 +31,18 @@ export async function requestTasksSummaryEmail(payload: TaskSummaryRequest) {
     throw new Error("No se pudo conectar al servicio de correo. Verifica tu conexion e intenta nuevamente.");
   }
 
-  const data = (await response.json().catch(() => ({}))) as TaskSummaryResponse;
+  const text = await response.text();
+  let data = {} as TaskSummaryResponse;
+
+  try {
+    data = JSON.parse(text) as TaskSummaryResponse;
+  } catch {
+    data = { message: text || undefined } as TaskSummaryResponse;
+  }
 
   if (!response.ok) {
-    throw new Error(data.message || "No se pudo solicitar el reporte por correo.");
+    const errorMessage = data.message || `No se pudo solicitar el reporte por correo. (${response.status} ${response.statusText})`;
+    throw new Error(errorMessage);
   }
 
   return data.message || "Solicitud de correo enviada correctamente.";
