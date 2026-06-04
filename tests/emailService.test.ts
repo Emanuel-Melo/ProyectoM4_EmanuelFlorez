@@ -58,5 +58,13 @@ describe("requestTasksSummaryEmail", () => {
 
     await expect(requestTasksSummaryEmail(payload)).resolves.toBe("Solicitud de correo enviada correctamente.");
   });
+
+  it("throws a friendly message when fetch fails due to network issues", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network Error")));
+
+    await expect(requestTasksSummaryEmail(payload)).rejects.toThrow(
+      "No se pudo conectar al servicio de correo. Verifica tu conexion e intenta nuevamente.",
+    );
+  });
 });
 

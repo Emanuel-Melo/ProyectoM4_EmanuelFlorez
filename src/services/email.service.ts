@@ -17,13 +17,20 @@ type TaskSummaryResponse = {
 };
 
 export async function requestTasksSummaryEmail(payload: TaskSummaryRequest) {
-  const response = await fetch("/api/sendTasksSummary", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch("/api/sendTasksSummary", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    throw new Error("No se pudo conectar al servicio de correo. Verifica tu conexion e intenta nuevamente.");
+  }
+
   const data = (await response.json().catch(() => ({}))) as TaskSummaryResponse;
 
   if (!response.ok) {

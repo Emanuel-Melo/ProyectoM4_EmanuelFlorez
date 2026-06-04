@@ -5,6 +5,7 @@ import writtenLogo from "../Orion task/Escrito orion task.png";
 import centerLogo from "../Orion task/Logo sin fondo orion task.png";
 import { useAuthCtx } from "../context/AuthContext";
 import { getFirebaseAuthErrorMessage } from "../utils/firebaseErrors";
+import LoginForm from "../components/auth/LoginForm";
 import "./LoginPage.css";
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -81,72 +82,18 @@ export default function LoginPage() {
           <p>Accede al centro de mando</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <label className="auth-field">
-            <span className="auth-field__label">Correo electronico</span>
-            <span className="auth-field__control">
-              <span className="auth-field__icon" aria-hidden="true">
-                ♙
-              </span>
-              <input
-                type="email"
-                value={email}
-                placeholder="ejemplo@orion-task.com"
-                autoComplete="email"
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </span>
-          </label>
-
-          <label className="auth-field">
-            <span className="auth-field__label">Contrasena</span>
-            <span className="auth-field__control">
-              <span className="auth-field__icon" aria-hidden="true">
-                ▣
-              </span>
-              <input
-                type="password"
-                value={password}
-                placeholder="••••••••••••"
-                autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <span className="auth-field__peek" aria-hidden="true">
-                ◉
-              </span>
-            </span>
-          </label>
-
-          <div className="auth-form__row">
-            <label className="auth-check">
-              <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-              <span />
-              Recordarme
-            </label>
-            <a href="#forgot" className="auth-form__link">
-              ¿Olvidaste tu contrasena?
-            </a>
-          </div>
-
-          {error && <p className="auth-form__error">{error}</p>}
-
-          <button className="auth-submit" type="submit" disabled={isLoading}>
-            Ingresar <span aria-hidden="true">›</span>
-          </button>
-        </form>
-
-        <div className="auth-divider">
-          <span>O continua con</span>
-        </div>
-
-        <div className="auth-socials">
-          <button type="button" className="auth-social" onClick={handleGoogleLogin} disabled={isLoading}>
-            <span className="auth-social__google">G</span>
-            Google
-          </button>
-        </div>
+        <LoginForm
+          email={email}
+          password={password}
+          remember={remember}
+          error={error}
+          isLoading={isLoading}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onRememberChange={setRemember}
+          onSubmit={handleSubmit}
+          onGoogleLogin={handleGoogleLogin}
+        />
 
         <footer className="auth-panel__footer">
           <span>¿No tienes una cuenta?</span>
