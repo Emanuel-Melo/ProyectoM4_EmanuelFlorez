@@ -176,6 +176,10 @@ Los tests cubren:
 - Deploy en Vercel: `npm run vercel:prod`
 - URL pública: https://proyecto-m4-emanuel-florez-8shgeq1ty.vercel.app/ 
 
+### Uso IA
+
+Durante el desarrollo se usaron herramientas de IA como agentes de IA Codex y GitHub Copilot, y chats para desarrollo y recomendaciones como ChatGPT y Claude para acelerar la creación de componentes, mejorar la estructura del código y proponer soluciones para la integración con Firebase y AWS SES. Las sugerencias de IA se revisaron y adaptaron manualmente para mantener la calidad del proyecto.
+
 ### Variables en Vercel
 
 Asegurarse de que en **Settings → Environment Variables** estén configuradas las variables servidor y frontend correctamente. En Vercel, `VITE_` es para frontend; las variables AWS no deben tener prefijo.
