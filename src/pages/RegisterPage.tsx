@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import writtenLogo from "../Orion task/Escrito orion task.png";
@@ -13,7 +13,7 @@ function getErrorMessage(error: unknown, fallback: string) {
 }
 
 export default function RegisterPage() {
-  const { register, loginWithGoogle } = useAuthCtx();
+  const { user, register, loginWithGoogle } = useAuthCtx();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +22,12 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

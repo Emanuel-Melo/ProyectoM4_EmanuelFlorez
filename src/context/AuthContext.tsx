@@ -7,6 +7,8 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { auth } from "../services/firebase";
@@ -41,6 +43,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsub();
   }, []);
 
+  // Manejar el resultado de signInWithRedirect cuando el flujo usa redirección
+  useEffect(() => {
+    let mounted = true;
+    async function handleRedirectResult() {
+      try {
+        const result = await getRedirectResult(auth);
+        if (!mounted) return;
+        if (result && result.user) {
+          setUser(result.user);
+        }
+      } catch (err) {
+        // Loguear para diagnóstico y permitir que la UI lo capture si es necesario
+        // No lanzamos para no romper el ciclo de montaje
+        // eslint-disable-next-line no-console
+        console.warn("Auth redirect result error:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    handleRedirectResult();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   async function register(email: string, password: string) {
     await createUserWithEmailAndPassword(auth, email, password);
   }
@@ -51,7 +80,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    provider.setCustomParameters({ prompt: "select_account" });
+
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      const authError = error as { code?: string };
+      if (
+        authError.code === "auth/popup-blocked" ||
+        authError.code === "auth/cancelled-popup-request" ||
+        authError.code === "auth/operation-not-supported-in-this-environment"
+      ) {
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      throw error;
+    }
   }
 
   async function logout() {
