@@ -146,10 +146,6 @@ export default function LoginPage() {
             <span className="auth-social__google">G</span>
             Google
           </button>
-          <button type="button" className="auth-social" disabled>
-            <span>●</span>
-            Github
-          </button>
         </div>
 
         <footer className="auth-panel__footer">
