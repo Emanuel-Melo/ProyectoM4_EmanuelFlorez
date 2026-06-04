@@ -105,9 +105,11 @@ export default function DashboardPage() {
       setActionMessage(message);
       window.setTimeout(() => setActionMessage(null), 2600);
     } catch (error) {
+      const errorMessage = getDashboardErrorMessage(error as Error);
       setSyncStatus("error");
-      setSyncMessage(getDashboardErrorMessage(error as Error));
-      setActionMessage(null);
+      setSyncMessage(errorMessage);
+      setActionMessage(`Operacion no completada: ${errorMessage}`);
+      window.setTimeout(() => setActionMessage(null), 3200);
     }
   }
 

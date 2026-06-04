@@ -41,8 +41,14 @@ export async function requestTasksSummaryEmail(payload: TaskSummaryRequest) {
   }
 
   if (!response.ok) {
-    const errorMessage = data.message || `No se pudo solicitar el reporte por correo. (${response.status} ${response.statusText})`;
+    const errorMessage =
+      data.message ||
+      `No se pudo solicitar el reporte por correo. (${response.status} ${response.statusText})`;
     throw new Error(errorMessage);
+  }
+
+  if (!data.message && text.length > 0) {
+    return text;
   }
 
   return data.message || "Solicitud de correo enviada correctamente.";

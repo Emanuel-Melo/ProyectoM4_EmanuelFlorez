@@ -1633,3 +1633,36 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 540px) {
+  .command__main {
+    padding: 0 0.5rem 0.75rem;
+  }
+
+  .command__topbar {
+    gap: 0.65rem;
+  }
+
+  .command__operator,
+  .command__nav {
+    width: 100%;
+  }
+
+  .command__nav-item {
+    font-size: 0.7rem;
+    padding: 0.8rem;
+  }
+
+  .command__grid,
+  .reports-grid,
+  .mission-stats,
+  .summary-grid,
+  .calendar-shell,
+  .calendar-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .report-note p {
+    max-width: 100%;
+  }
+}

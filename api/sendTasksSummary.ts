@@ -168,11 +168,12 @@ export default async function handler(request: VercelRequest, response: VercelRe
       summary,
     } as SendResult);
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     // eslint-disable-next-line no-console
     console.error("AWS SES error:", error);
     return response.status(500).json({
       message:
-        "No se pudo enviar el correo con AWS SES. Verifica la configuracion de SES y las credenciales.",
+        `No se pudo enviar el correo con AWS SES. ${errorMessage || "Verifica la configuración de SES y las credenciales."}`,
       summary,
     } as SendResult);
   }
