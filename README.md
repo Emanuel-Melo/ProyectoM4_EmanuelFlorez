@@ -2,7 +2,7 @@
 
 **Aplicación SPA para gestión de tareas y reportes operativos con Firebase, AWS SES y despliegue en Vercel.**
 
-**URL de producción:** https://proyecto-m4-emanuel-florez-8shgeq1ty.vercel.app/ 
+**URL de producción:** https://proyecto-m4-emanuel-florez.vercel.app/  
 ## Descripción
 
 Orion Task es una aplicación construida para pequeñas empresas que necesitan un tablero de tareas diario con persistencia por usuario, autenticación segura, sincronización en tiempo real y envío de reportes por email.
@@ -174,7 +174,7 @@ Los tests cubren:
 ### Producción
 
 - Deploy en Vercel: `npm run vercel:prod`
-- URL pública: https://proyecto-m4-emanuel-florez-8shgeq1ty.vercel.app/ 
+- URL pública: https://proyecto-m4-emanuel-florez.vercel.app/ 
 
 ### Uso IA
 
