@@ -167,6 +167,23 @@ AWS_SECRET_ACCESS_KEY
 AWS_SES_FROM_EMAIL
 ```
 
+### 7. **AWS SES en modo seguro (para evitar costos extras)**
+
+- Usa SES en **sandbox** mientras desarrollas. En este modo puedes enviar solo a correos verificados y no necesitas pedir límites de envío.
+- Verifica el correo remitente (`AWS_SES_FROM_EMAIL`) en SES antes de probar.
+- Verifica también la dirección de destino si tu cuenta SES está en sandbox.
+- No configures envío masivo hasta tener aprobado el uso de SES en producción.
+- Si las variables AWS no están completas, la función serverless responderá con un mensaje de modo prueba y no intentará enviar el correo.
+
+**Pasos rápidos en AWS:**
+1. Abre AWS SES en la región `AWS_REGION`.
+2. Verifica identidad de remitente (`AWS_SES_FROM_EMAIL`).
+3. Verifica direccion de destino mientras estés en sandbox.
+4. Crea un usuario IAM con política mínima: `AmazonSESFullAccess` o la política SES necesaria para `SendEmail`.
+5. Copia `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` a tus variables de entorno de Vercel.
+
+**Nota importante:** en sandbox SES no tendrás costos por uso ligero, pero sí debes respetar las direcciones verificadas y los límites de prueba.
+
 **Separación crítica:**
 - Las claves de Firebase se necesitan en el frontend (inicialización de SDK)
 - Las credenciales AWS **nunca** llegan al navegador (solo en servidor)
