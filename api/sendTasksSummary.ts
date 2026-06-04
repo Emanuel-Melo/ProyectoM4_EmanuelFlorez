@@ -89,10 +89,28 @@ export default async function handler(request: VercelRequest, response: VercelRe
     return response.status(400).json({ message: "Payload de reporte incompleto." });
   }
 
-  const awsRegion = process.env.AWS_REGION;
-  const fromEmail = process.env.AWS_SES_FROM_EMAIL;
-  const accessKey = process.env.AWS_ACCESS_KEY_ID;
-  const secretKey = process.env.AWS_SECRET_ACCESS_KEY;
+  function firstEnv(...names: string[]) {
+    for (const n of names) {
+      const v = process.env[n];
+      if (typeof v === "string" && v.trim() !== "") return v.trim();
+    }
+    return undefined;
+  }
+
+  const awsRegion = firstEnv("AWS_REGION", "AWS_DEFAULT_REGION", "AWS_REGION_NAME", "VITE_AWS_REGION");
+  const fromEmail = firstEnv("AWS_SES_FROM_EMAIL", "SES_FROM_EMAIL", "FROM_EMAIL", "VITE_AWS_SES_FROM_EMAIL");
+  const accessKey = firstEnv("AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY", "AWS_KEY", "VITE_AWS_ACCESS_KEY_ID");
+  const secretKey = firstEnv("AWS_SECRET_ACCESS_KEY", "AWS_SECRET_KEY", "AWS_SECRET", "VITE_AWS_SECRET_ACCESS_KEY");
+
+  // Log presence (don't print secrets). Useful to debug missing envs in Vercel logs.
+  const envPresence = {
+    AWS_REGION: !!awsRegion,
+    AWS_SES_FROM_EMAIL: !!fromEmail,
+    AWS_ACCESS_KEY_ID: !!accessKey,
+    AWS_SECRET_ACCESS_KEY: !!secretKey,
+  };
+  // eslint-disable-next-line no-console
+  console.log("sendTasksSummary - env presence:", envPresence);
 
   const summary = {
     to: payload.to,
